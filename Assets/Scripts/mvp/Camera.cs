@@ -16,7 +16,7 @@ public class Camera : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         Vector3 position = this.transform.position;
-        position.z = Ball.position.z + zOffset;
+        position.z = Mathf.Clamp(Ball.position.z + zOffset, -100f, 10f);
         this.transform.position = position;
 
     }

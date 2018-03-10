@@ -9,11 +9,13 @@ public class Ball : MonoBehaviour {
     public float thrust = 1300f;
     public Rigidbody rb;
     public States.BallStates currentState;
+    public Vector3 ShotDirection;
 
     // Use this for initialization
     void Start () {
-        rb = GetComponent<Rigidbody>();
-        currentState = States.BallStates.Move;
+        this.rb = GetComponent<Rigidbody>();
+        this.currentState = States.BallStates.Move;
+        this.ShotDirection = transform.forward;
     }
 	
 	// Update is called once per frame
@@ -21,11 +23,39 @@ public class Ball : MonoBehaviour {
         if (currentState == States.BallStates.Move)
         {
             this.MoveControl();
-        }            
+        }
+
+        if (currentState == States.BallStates.Rotate)
+        {
+            this.DirectionControl();
+        }
+
     }
 
     // Called on the update when the state is Move
     private void MoveControl ()
+    {
+        if (Input.GetKeyDown("space"))
+        {
+            this.currentState = States.BallStates.Rotate;
+        }
+
+        if (Input.GetKey(KeyCode.LeftArrow))
+        {
+            Vector3 position = this.transform.position;
+            position.x -= MoveSpeed;
+            this.transform.position = position;
+        }
+
+        if (Input.GetKey(KeyCode.RightArrow))
+        {
+            Vector3 position = this.transform.position;
+            position.x += MoveSpeed;
+            this.transform.position = position;
+        }
+    }
+
+    private void DirectionControl ()
     {
         if (Input.GetKeyDown("space"))
         {
