@@ -1,15 +1,21 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ball : MonoBehaviour {
+public class Ball : MonoBehaviour
+{
 
-    private const float MoveSpeed = 0.1f; 
+    private const float MoveSpeed = 0.1f;
+    private const float RotationSpeed = 5f;
+    private const float MaxRotation = 50f;
 
     public float thrust = 1300f;
     public Rigidbody rb;
     public States.BallStates currentState;
     public Vector3 ShotDirection;
+
+    public event EventHandler<BallEventArgs> StateChanged;
 
     // Use this for initialization
     void Start () {
@@ -25,9 +31,18 @@ public class Ball : MonoBehaviour {
             this.MoveControl();
         }
 
-        if (currentState == States.BallStates.Rotate)
+        else if (currentState == States.BallStates.Rotate)
         {
-            this.DirectionControl();
+            this.RotateControl();
+        }
+
+    }
+
+    protected virtual void OnChangeState(States.BallStates newState)
+    {
+        if (StateChanged != null)
+        {
+            StateChanged(this, new BallEventArgs() { NewState = newState });
         }
 
     }
@@ -37,7 +52,7 @@ public class Ball : MonoBehaviour {
     {
         if (Input.GetKeyDown("space"))
         {
-            this.currentState = States.BallStates.Rotate;
+            this.ChangeState(States.BallStates.Rotate);
         }
 
         if (Input.GetKey(KeyCode.LeftArrow))
@@ -55,26 +70,28 @@ public class Ball : MonoBehaviour {
         }
     }
 
-    private void DirectionControl ()
+    private void RotateControl ()
     {
         if (Input.GetKeyDown("space"))
         {
-            rb.AddForce(transform.forward * thrust);
-            this.currentState = States.BallStates.Roll;
+            rb.AddRelativeForce(ShotDirection * thrust);
+            this.ChangeState(States.BallStates.Roll);
         }
 
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            Vector3 position = this.transform.position;
-            position.x -= MoveSpeed;
-            this.transform.position = position;
+            this.transform.Rotate(Vector3.up * -RotationSpeed * Time.deltaTime);
         }
 
         if (Input.GetKey(KeyCode.RightArrow))
         {
-            Vector3 position = this.transform.position;
-            position.x += MoveSpeed;
-            this.transform.position = position;
+            this.transform.Rotate(Vector3.up * RotationSpeed * Time.deltaTime);
         }
+    }
+
+    private void ChangeState(States.BallStates newState)
+    {
+        this.currentState = newState;
+        this.OnChangeState(newState);
     }
 }
