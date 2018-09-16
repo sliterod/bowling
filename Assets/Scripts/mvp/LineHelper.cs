@@ -3,18 +3,38 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LineHelper : MonoBehaviour
+public class LineHelper : MonoBehaviour, IBar
 {
-    public Ball Ball;
+    private const float BaseLength = 29.54f;
+
+    private float lengthMultiplier = 1;
+
+    public PlayerTurnController playerTurnController;
+
+    public bool Visible
+    {
+        set
+        {
+            this.gameObject.SetActive(value);
+        }
+    }
+
+    public float Value
+    {
+        set
+        {
+            this.lengthMultiplier = value;
+        }
+    }
 
     private void Start()
     {
-        this.Ball.StateChanged += this.OnChangeState;
+        this.playerTurnController.StateChanged += this.OnChangeState;
     }
 
     public void OnChangeState(object source, BallEventArgs args)
     {
-        if(args.NewState == States.BallStates.Roll)
+        if(args.NewState == States.TurnPhase.Roll)
         {
             this.gameObject.SetActive(false);
         }

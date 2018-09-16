@@ -5,5 +5,6 @@ using UnityEngine;
 public class States : MonoBehaviour
 {
 
-    public enum BallStates { Move, Rotate, Spin, Force, Roll }
+    public enum TurnPhase { Move, Rotate, Spin, Force, Roll }
+
 }

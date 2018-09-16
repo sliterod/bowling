@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class BallEventArgs : EventArgs
 {
-    public States.BallStates NewState { get; set; }	
+    public States.TurnPhase NewState { get; set; }	
 }
