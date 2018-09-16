@@ -11,6 +11,11 @@ public class LineHelper : MonoBehaviour, IBar
 
     public PlayerTurnController playerTurnController;
 
+    private void Start()
+    {
+        this.playerTurnController.StateChanged += this.OnChangeState;
+    }
+
     public bool Visible
     {
         set
@@ -23,13 +28,8 @@ public class LineHelper : MonoBehaviour, IBar
     {
         set
         {
-            this.lengthMultiplier = value;
+            this.transform.localScale = new Vector3(1, 1, BaseLength * value);
         }
-    }
-
-    private void Start()
-    {
-        this.playerTurnController.StateChanged += this.OnChangeState;
     }
 
     public void OnChangeState(object source, BallEventArgs args)

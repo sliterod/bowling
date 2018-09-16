@@ -44,6 +44,7 @@ public class Ball : MonoBehaviour, IBall
 
     public void Throw()
     {
+        this.rb.isKinematic = false;
         rb.AddRelativeForce(ShotDirection * thrust);
     }
 }
